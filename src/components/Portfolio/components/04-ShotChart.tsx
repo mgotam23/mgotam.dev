@@ -2,14 +2,18 @@ import { ProjectModal } from "@/components/ProjectModal";
 import { projects } from "@/config/config";
 import React, { useState, useEffect } from "react";
 
-const ShotChart: React.FC = () => {
-  const [hoveredShot, setHoveredShot] = useState(null);
+interface HandleEscEvent extends KeyboardEvent {
+  key: string;
+}
 
-  const [selectedProject, setSelectedProject] = useState(null);
+const ShotChart: React.FC = () => {
+  const [hoveredShot, setHoveredShot] = useState<typeof projects[number] | null>(null);
+
+  const [selectedProject, setSelectedProject] = useState<typeof projects[number] | null>(null);
 
   // Close modal on 'Escape' key press
   useEffect(() => {
-    const handleEsc = (event) => {
+    const handleEsc = (event: HandleEscEvent): void => {
       if (event.key === "Escape") {
         setSelectedProject(null);
       }
@@ -18,7 +22,9 @@ const ShotChart: React.FC = () => {
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
-  const shotStyles = {
+  type ShotType = "3-Pointer" | "Mid-Range" | "In the Paint";
+  
+  const shotStyles: Record<ShotType, string> = {
     "3-Pointer": "fill-orange-400",
     "Mid-Range": "fill-orange-500",
     "In the Paint": "fill-orange-600",
@@ -123,11 +129,9 @@ const ShotChart: React.FC = () => {
                 strokeWidth="2"
                 opacity="0.4"
               />
-
-              {/* Render Shots and Labels */}
               {projects.map((project, index) => {
                 const xPosPercent = parseFloat(project.shotPosition.x);
-                let textAnchor = "middle";
+                let textAnchor: "inherit" | "middle" | "start" | "end" | undefined = "middle";
                 let textX = project.shotPosition.x;
 
                 if (xPosPercent < 15) {
@@ -135,6 +139,9 @@ const ShotChart: React.FC = () => {
                 } else if (xPosPercent > 85) {
                   textAnchor = "end";
                 }
+
+                // Ensure project.type is typed as ShotType
+                const shotType = project.type as ShotType;
 
                 return (
                   <g
@@ -149,7 +156,7 @@ const ShotChart: React.FC = () => {
                       cy={project.shotPosition.y}
                       r="12"
                       className={`${
-                        shotStyles[project.type]
+                        shotStyles[shotType]
                       } opacity-90 group-hover:opacity-100 transition-opacity`}
                       stroke="#111827"
                       strokeWidth="2"

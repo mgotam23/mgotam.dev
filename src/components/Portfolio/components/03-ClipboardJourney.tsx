@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { CareerTimelineItem } from "@/types/types";
+import { CareerTimelineItem, ScoutingReportData } from "@/types/types";
 import { ExternalLink, FileText } from "lucide-react";
 import { ScoutingReportModal } from "./ClipboardJourney.tsx/ScoutingReportModal";
 
 interface ClipboardJourneyProps {
   careerTimeline: CareerTimelineItem[];
+}
+
+interface HandleEscEvent extends KeyboardEvent {
+  key: string;
 }
 
 const ClipboardJourney: React.FC<ClipboardJourneyProps> = ({
@@ -15,10 +19,10 @@ const ClipboardJourney: React.FC<ClipboardJourneyProps> = ({
   const scoutingReportData = activeJob.data;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
   // Close modal on 'Escape' key press
   useEffect(() => {
-    const handleEsc = (event) => {
+    const handleEsc = (event: HandleEscEvent): void => {
       if (event.key === "Escape") {
         setIsModalOpen(false);
       }
@@ -109,10 +113,10 @@ const ClipboardJourney: React.FC<ClipboardJourneyProps> = ({
           </div>
         </div>
       </section>
-      <ScoutingReportModal 
+      <ScoutingReportModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        data={scoutingReportData}
+        data={scoutingReportData ?? {} as ScoutingReportData}
       />
     </>
   );

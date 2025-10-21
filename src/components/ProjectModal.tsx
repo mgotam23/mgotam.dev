@@ -13,10 +13,10 @@ type Project = {
   title: string;
   techStack: string[];
   details: string[];
-  github: string;
+  github?: string;
   type: string;
   shotPosition: { x: string; y: string };
-  demo: string;
+  demo?: string;
   images?: {
     src: string;
     alt: string;

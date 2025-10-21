@@ -6,10 +6,14 @@ interface HeaderProps {
   sections: string[];
 }
 
+interface SectionDisplayNames {
+  [key: string]: string;
+}
+
 const Header: React.FC<HeaderProps> = ({ sections }) => {
   const [activeSection, setActiveSection] = useState("tip_off");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const sectionDisplayNames = {
+  const sectionDisplayNames: SectionDisplayNames = {
     tip_off: "Tip-Off",
     journey: "The Journey",
     highlights: "Highlights",
@@ -73,7 +77,9 @@ const Header: React.FC<HeaderProps> = ({ sections }) => {
                     : "text-[#F9FAFB] hover:text-orange-500 cursor-pointer"
                 }`}
               >
-                {sectionDisplayNames[section]}
+                {sectionDisplayNames.hasOwnProperty(section)
+                  ? sectionDisplayNames[section]
+                  : section}
               </button>
             ))}
           </div>
